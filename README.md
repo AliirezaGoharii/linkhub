@@ -47,7 +47,7 @@ To get a local copy up and running, follow these simple steps.
 
 1.  **Clone the repo:**
     ```sh
-    git clone [https://github.com/](https://github.com/)[your-username]/linkhub.git
+    git clone [https://github.com/aliirezagoharii/linkhub.git
     cd linkhub
     ```
 2.  **Install PHP dependencies:**
@@ -87,6 +87,6 @@ Distributed under the MIT License. See `LICENSE` for more information.
 
 ## Contact
 
-[Your Name] - [@your_telegram_username](https://t.me/your_telegram_username)
+[MyTelegram] - [@Hazrate_Shrek](https://t.me/Hazrate_Shrek)
 
-Project Link: [https://github.com/[your-username]/linkhub](https://github.com/[your-username]/linkhub)
+Project Link: [https://github.com/aliirezagoharii/linkhub]
