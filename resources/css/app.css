@@ -1,0 +1,22 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer components {
+    .dark-input {
+        @apply w-full bg-slate-900/50 border border-slate-700 text-slate-200 rounded-md shadow-sm placeholder-slate-500;
+        @apply focus:border-indigo-500 focus:ring-indigo-500;
+        @apply transition duration-150 ease-in-out;
+    }
+    .animated-button {
+        @apply inline-flex items-center justify-center px-4 py-2 border border-transparent rounded-md font-semibold text-xs uppercase tracking-widest;
+        @apply transition-all duration-200 ease-in-out;
+    }
+    .animated-button:hover {
+        @apply transform -translate-y-0.5;
+        @apply shadow-lg;
+    }
+    .animated-button:disabled {
+        @apply opacity-50 transform-none cursor-not-allowed shadow-none;
+    }
+}
