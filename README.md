@@ -47,7 +47,7 @@ To get a local copy up and running, follow these simple steps.
 
 1.  **Clone the repo:**
     ```sh
-    git clone [https://github.com/aliirezagoharii/linkhub.git
+    git clone https://github.com/aliirezagoharii/linkhub.git
     cd linkhub
     ```
 2.  **Install PHP dependencies:**
