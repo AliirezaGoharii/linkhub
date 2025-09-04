@@ -7,7 +7,7 @@
 
 A complete Software-as-a-Service (SaaS) platform for building beautiful "link-in-bio" pages, architected with the modern TALL stack philosophy using Laravel and Vue.js (via Inertia.js).
 
-![LinkHub Screenshot]([YOUR_PROJECT_SCREENSHOT_URL])
+![LinkHub Screenshot](./.github/assets/linkhub-preview.png)
 
 ---
 
