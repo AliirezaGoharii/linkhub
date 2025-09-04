@@ -89,4 +89,4 @@ Distributed under the MIT License. See `LICENSE` for more information.
 
 [MyTelegram] - [@Hazrate_Shrek](https://t.me/Hazrate_Shrek)
 
-Project Link: [https://github.com/aliirezagoharii/linkhub]
+Project Link: Soon.
