@@ -91,6 +91,6 @@ Distributed under the MIT License. See `LICENSE` for more information.
 
 ## 📬 Contact
 
-Alireza Gohari - [@Hazrate_Shrek](https://t.me/Hazrate_Shrek)
+Alireza Gohari - [@RunningFromReallity](https://t.me/RunningFromReallity)
 
 Project Link: [https://github.com/aliirezagoharii/linkhub](https://github.com/aliirezagoharii/linkhub)
