@@ -7,7 +7,7 @@
 
 A complete Software-as-a-Service (SaaS) platform for building beautiful "link-in-bio" pages, architected with a modern stack using Laravel and Vue.js (via Inertia.js).
 
-**✨ View the Live Demo:** **[linkhub-production-afb2.up.railway.app](https://linkhub-production-afb2.up.railway.app/)**
+**✨ View the Live Demo:** **Unavailable**
 
 > **Note:** As this project is deployed on a free-tier hobby plan, the initial load may be slow if the server is in a sleep state. Please allow a few moments for the application to wake up.
 
