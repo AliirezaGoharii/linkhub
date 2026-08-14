@@ -9,10 +9,18 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout repository with full history
-        uses: actions/checkout@v3
+      - name: Checkout repository with full history and LFS
+        uses: actions/checkout@v4
         with:
-          fetch-depth: 0  # ← این خط باعث می‌شود کل تاریخچه دریافت شود
+          fetch-depth: 0
+          lfs: true
+
+      - name: Convert binaries to LFS for HF
+        run: |
+          git lfs install
+          git config user.email "ci@github-actions"
+          git config user.name "GitHub Actions"
+          git lfs migrate import --yes --include="*.png,*.jpg,*.jpeg,*.gif,*.webp,*.mp4,*.mov,*.pdf"
 
       - name: Push to Hugging Face Space
         env:
