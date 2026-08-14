@@ -9,29 +9,23 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout repository
+      - name: Checkout repository with full history
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
           lfs: true
 
-      - name: Create and push a clean snapshot
+      - name: Convert all binaries to LFS
+        run: |
+          git lfs install
+          git config user.email "github-actions@users.noreply.github.com"
+          git config user.name "GitHub Actions"
+          # این دستور تمام فایل‌های باینری را در کل تاریخچه به LFS تبدیل می‌کند
+          git lfs migrate import --yes --everything --include="*.png,*.jpg,*.jpeg,*.gif,*.webp,*.mp4,*.mov,*.pdf,*.pkl"
+
+      - name: Push to Hugging Face Space
         env:
           HF_TOKEN: ${{ secrets.HF_TOKEN }}
         run: |
-          git config --global user.email "github-actions@users.noreply.github.com"
-          git config --global user.name "github-actions"
-
-          # یک شاخه جدید و بدون تاریخچه (orphan) بساز
-          git checkout --orphan hf-sync
-          git reset
-          
-          # همه فایل‌های فعلی را به این شاخه اضافه کن (فایل‌های موجود در .gitignore نادیده گرفته می‌شوند)
-          git add -A
-          
-          # یک کامیت جدید برای این snapshot بساز
-          git commit -m "Deploy clean snapshot to HF Space"
-          
-          # شاخه جدید را با نیرو به هاگینگ‌فیس بفرست
           git remote add space https://aliirezagoharii:$HF_TOKEN@huggingface.co/spaces/aliirezagoharii/linkhub
-          git push --force space hf-sync:main
+          git push --force space main
