@@ -9,22 +9,29 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout repository with full history and LFS
+      - name: Checkout repository
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
           lfs: true
 
-      - name: Convert binaries to LFS for HF
-        run: |
-          git lfs install
-          git config user.email "ci@github-actions"
-          git config user.name "GitHub Actions"
-          git lfs migrate import --yes --include="*.png,*.jpg,*.jpeg,*.gif,*.webp,*.mp4,*.mov,*.pdf"
-
-      - name: Push to Hugging Face Space
+      - name: Create and push a clean snapshot
         env:
           HF_TOKEN: ${{ secrets.HF_TOKEN }}
         run: |
+          git config --global user.email "github-actions@users.noreply.github.com"
+          git config --global user.name "github-actions"
+
+          # یک شاخه جدید و بدون تاریخچه (orphan) بساز
+          git checkout --orphan hf-sync
+          git reset
+          
+          # همه فایل‌های فعلی را به این شاخه اضافه کن (فایل‌های موجود در .gitignore نادیده گرفته می‌شوند)
+          git add -A
+          
+          # یک کامیت جدید برای این snapshot بساز
+          git commit -m "Deploy clean snapshot to HF Space"
+          
+          # شاخه جدید را با نیرو به هاگینگ‌فیس بفرست
           git remote add space https://aliirezagoharii:$HF_TOKEN@huggingface.co/spaces/aliirezagoharii/linkhub
-          git push --force space main
+          git push --force space hf-sync:main
