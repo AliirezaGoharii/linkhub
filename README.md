@@ -1,14 +1,3 @@
----
-title: LinkHub
-emoji: 🔗
-colorFrom: blue
-colorTo: indigo
-sdk: gradio
-sdk_version: "4.36.1"
-python_version: "3.10"
-app_file: app.py
-pinned: false
----
 # LinkHub - A Micro-SaaS Platform 🚀
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
