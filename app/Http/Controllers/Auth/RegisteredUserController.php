@@ -4,11 +4,13 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
+use App\Support\ReservedUsernames;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Validation\Rule;
 use Illuminate\Validation\Rules;
 use Inertia\Inertia;
 use Inertia\Response;
@@ -31,10 +33,20 @@ class RegisteredUserController extends Controller
     public function store(Request $request): RedirectResponse
     {
         $request->validate([
-            'name' => 'required|string|max:255',
-            'username' => 'required|string|lowercase|max:255|unique:'.User::class,
-            'email' => 'required|string|lowercase|email|max:255|unique:'.User::class,
+            'name' => ['required', 'string', 'max:255'],
+            'username' => [
+                'required',
+                'string',
+                'lowercase',
+                'alpha_dash',
+                'max:24',
+                ReservedUsernames::rule(),
+                Rule::unique(User::class),
+            ],
+            'email' => ['required', 'string', 'lowercase', 'email', 'max:255', Rule::unique(User::class)],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
+        ], [
+            'username.not_in' => 'This username is reserved and cannot be used.',
         ]);
 
         $user = User::create([
@@ -48,9 +60,8 @@ class RegisteredUserController extends Controller
 
         Auth::login($user);
 
-        // --- THIS IS THE FIX ---
-        // Instead of redirecting to the protected dashboard, we redirect
-        // to the route that shows the "verify email" prompt.
-        return redirect('/dashboard');
+        // New registrations are unverified; the "verified" middleware on the
+        // dashboard will redirect to the email verification notice.
+        return redirect()->route('dashboard');
     }
 }

@@ -5,6 +5,9 @@ import { usePageStore } from '@/stores/pageStore';
 import draggable from 'vuedraggable';
 import LinkItem from './LinkItem.vue';
 import InputError from '@/Components/InputError.vue';
+import Modal from '@/Components/Modal.vue';
+import DangerButton from '@/Components/DangerButton.vue';
+import SecondaryButton from '@/Components/SecondaryButton.vue';
 import { debounce } from 'lodash';
 
 const pageStore = usePageStore();
@@ -15,7 +18,7 @@ const form = useForm({ title: '', url: '' });
 const store = () => form.post('/links', {
     preserveScroll: true,
     onSuccess: (page) => {
-        pageStore.userLinks = page.props.auth.user.links;
+        pageStore.syncLinks(page.props.links);
         form.reset();
     }
 });
@@ -29,6 +32,25 @@ const updateLinkOrder = debounce(() => {
 }, 500);
 
 const onDragEnd = () => updateLinkOrder();
+
+// --- Delete confirmation -------------------------------------------------
+const linkToDelete = ref(null);
+const deleting = ref(false);
+
+const requestDelete = (link) => { linkToDelete.value = link; };
+
+const confirmDelete = () => {
+    if (!linkToDelete.value) return;
+    deleting.value = true;
+    router.delete(`/links/${linkToDelete.value.id}`, {
+        preserveScroll: true,
+        onSuccess: () => pageStore.removeLink(linkToDelete.value.id),
+        onFinish: () => {
+            deleting.value = false;
+            linkToDelete.value = null;
+        },
+    });
+};
 </script>
 
 <template>
@@ -36,7 +58,7 @@ const onDragEnd = () => updateLinkOrder();
         v-motion
         :initial="{ opacity: 0, y: 100 }"
         :enter="{ opacity: 1, y: 0, transition: { duration: 500, delay: 200, type: 'spring', stiffness: 100, damping: 15 } }"
-        class="bg-slate-800/50 backdrop-blur-sm border-y sm:border-x border-slate-700/50 sm:rounded-2xl shadow-2xl shadow-black/20 overflow-hidden"
+        class="card"
     >
         <div class="p-6 sm:p-8">
             <div
@@ -44,8 +66,8 @@ const onDragEnd = () => updateLinkOrder();
                 :initial="{ opacity: 0, y: 20 }"
                 :enter="{ opacity: 1, y: 0, transition: { delay: 300 } }"
             >
-                <h2 class="text-2xl font-bold text-slate-100 font-rubik tracking-tight">My Links</h2>
-                <p class="mt-1 text-sm text-slate-400 font-inter">Add, edit, and reorder your links.</p>
+                <h2 class="card-title">My Links</h2>
+                <p class="card-subtitle">Add, edit, and reorder your links.</p>
             </div>
 
             <form @submit.prevent="store" class="mt-6 space-y-4">
@@ -75,7 +97,7 @@ const onDragEnd = () => updateLinkOrder();
                         :initial="{ opacity: 0, y: 20 }"
                         :enter="{ opacity: 1, y: 0, transition: { delay: 400 + index * 50 } }"
                     >
-                        <LinkItem :link="element" />
+                        <LinkItem :link="element" @delete-requested="requestDelete" />
                     </div>
                 </template>
             </draggable>
@@ -85,5 +107,22 @@ const onDragEnd = () => updateLinkOrder();
                 <p class="text-sm mt-1">Use the form above to add your first link!</p>
             </div>
         </div>
+
+        <Modal :show="linkToDelete !== null" @close="linkToDelete = null">
+            <div class="p-6">
+                <h2 class="text-lg font-semibold text-slate-900">Delete link</h2>
+                <p class="mt-2 text-sm text-slate-600">
+                    Are you sure you want to delete
+                    <span class="font-semibold">{{ linkToDelete?.title }}</span>?
+                    Its click history will be lost. This action cannot be undone.
+                </p>
+                <div class="mt-6 flex justify-end gap-3">
+                    <SecondaryButton @click="linkToDelete = null">Cancel</SecondaryButton>
+                    <DangerButton :disabled="deleting" @click="confirmDelete">
+                        {{ deleting ? 'Deleting...' : 'Delete Link' }}
+                    </DangerButton>
+                </div>
+            </div>
+        </Modal>
     </div>
 </template>

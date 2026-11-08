@@ -1,0 +1,37 @@
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    /**
+     * Recreate the password reset token table.
+     *
+     * The table is part of the default Laravel users migration but was
+     * dropped when this project customized it, which silently broke the
+     * "forgot password" flow. Restored in its own migration so existing
+     * deployments pick it up too.
+     */
+    public function up(): void
+    {
+        if (Schema::hasTable('password_reset_tokens')) {
+            return;
+        }
+
+        Schema::create('password_reset_tokens', function (Blueprint $table) {
+            $table->string('email')->primary();
+            $table->string('token');
+            $table->timestamp('created_at')->nullable();
+        });
+    }
+
+    /**
+     * Reverse the migrations.
+     */
+    public function down(): void
+    {
+        Schema::dropIfExists('password_reset_tokens');
+    }
+};

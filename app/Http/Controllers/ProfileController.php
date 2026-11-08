@@ -12,17 +12,17 @@ use Illuminate\Support\Facades\Redirect;
 use Inertia\Inertia;
 use Inertia\Response;
 
-class ProfileController extends Controller {
-    protected UserService $userService;
-
-    public function __construct(UserService $userService) {
-        $this->userService = $userService;
-    }
+class ProfileController extends Controller
+{
+    public function __construct(
+        protected UserService $userService,
+    ) {}
 
     /**
      * Display the user's profile form.
      */
-    public function edit(Request $request): Response {
+    public function edit(Request $request): Response
+    {
         return Inertia::render('Profile/Edit', [
             'mustVerifyEmail' => $request->user() instanceof MustVerifyEmail,
             'status' => session('status'),
@@ -32,14 +32,17 @@ class ProfileController extends Controller {
     /**
      * Update the user's profile information.
      */
-    public function update(ProfileUpdateRequest $request): RedirectResponse {
-        $this->userService->updateProfile($request->user(), $request->validated());
+    public function update(ProfileUpdateRequest $request): RedirectResponse
+    {
+        $emailChanged = $this->userService->updateProfile(
+            $request->user(),
+            $request->validated()
+        );
 
-        // This logic remains from Breeze for email verification
-        if ($request->user()->isDirty('email')) {
+        if ($emailChanged && $request->user() instanceof MustVerifyEmail) {
             $request->user()->email_verified_at = null;
+            $request->user()->save();
         }
-        $request->user()->save();
 
         return Redirect::route('profile.edit');
     }
@@ -47,7 +50,8 @@ class ProfileController extends Controller {
     /**
      * Delete the user's account.
      */
-    public function destroy(Request $request): RedirectResponse {
+    public function destroy(Request $request): RedirectResponse
+    {
         $request->validate([
             'password' => ['required', 'current_password'],
         ]);
@@ -56,6 +60,7 @@ class ProfileController extends Controller {
 
         Auth::logout();
 
+        $this->userService->deleteAllMedia($user);
         $user->delete();
 
         $request->session()->invalidate();

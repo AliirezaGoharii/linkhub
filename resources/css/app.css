@@ -4,7 +4,7 @@
 
 @layer components {
     .dark-input {
-        @apply w-full bg-slate-900/50 border border-slate-700 text-slate-200 rounded-md shadow-sm placeholder-slate-500;
+        @apply w-full px-3 py-2 bg-slate-900/50 border border-slate-700 text-slate-200 rounded-md shadow-sm placeholder-slate-500;
         @apply focus:border-indigo-500 focus:ring-indigo-500;
         @apply transition duration-150 ease-in-out;
     }
@@ -18,5 +18,14 @@
     }
     .animated-button:disabled {
         @apply opacity-50 transform-none cursor-not-allowed shadow-none;
+    }
+    .card {
+        @apply bg-slate-800/50 backdrop-blur-sm border-y sm:border-x border-slate-700/50 sm:rounded-2xl shadow-2xl shadow-black/20 overflow-hidden;
+    }
+    .card-title {
+        @apply text-2xl font-bold text-slate-100 font-rubik tracking-tight;
+    }
+    .card-subtitle {
+        @apply mt-1 text-sm text-slate-400 font-inter;
     }
 }

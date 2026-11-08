@@ -25,15 +25,22 @@ class UserFactory extends Factory
     {
         return [
             'name' => fake()->name(),
+            'username' => str(fake()->unique()->userName())
+                ->lower()
+                ->replaceMatches('/[^a-z0-9_-]/', '')
+                ->limit(24, '')
+                ->toString(),
+            'bio' => fake()->sentence(),
             'email' => fake()->unique()->safeEmail(),
             'email_verified_at' => now(),
             'password' => static::$password ??= Hash::make('password'),
+            'theme_color' => '#6366F1',
             'remember_token' => Str::random(10),
         ];
     }
 
     /**
-     * Indicate that the model's email address should be unverified.
+     * Indicate that the model's email address is unverified.
      */
     public function unverified(): static
     {

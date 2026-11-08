@@ -17,7 +17,7 @@ class HandleInertiaRequests extends Middleware
     /**
      * Determine the current asset version.
      */
-    public function version(Request $request): string|null
+    public function version(Request $request): ?string
     {
         return parent::version($request);
     }
@@ -33,7 +33,10 @@ class HandleInertiaRequests extends Middleware
 
         return array_merge(parent::share($request), [
             'auth' => [
-                'user' => $user ? $user->load('links') : null,
+                // The authenticated user only — links are passed as an
+                // explicit prop by the pages that need them, so every
+                // request no longer serializes the whole link list.
+                'user' => $user,
             ],
             'flash' => [
                 'success' => fn () => $request->session()->get('success'),
@@ -42,4 +45,3 @@ class HandleInertiaRequests extends Middleware
         ]);
     }
 }
-

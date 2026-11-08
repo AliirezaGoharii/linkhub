@@ -1,9 +1,9 @@
 {
     "$schema": "https://getcomposer.org/schema.json",
-    "name": "laravel/laravel",
+    "name": "aliirezagoharii/linkhub",
     "type": "project",
-    "description": "The skeleton application for the Laravel framework.",
-    "keywords": ["laravel", "framework"],
+    "description": "A link-in-bio micro-SaaS platform built with Laravel 12, Inertia and Vue 3.",
+    "keywords": ["laravel", "link-in-bio", "linktree", "saas", "inertia", "vue"],
     "license": "MIT",
     "require": {
         "php": "^8.2",
